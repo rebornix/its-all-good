@@ -14,11 +14,9 @@ function showAuth() {
     document.getElementById('auth-screen').style.display = 'flex';
     document.getElementById('app').style.display = 'none';
 
-    // Show device flow button only if clientId is configured
+    // Device flow login
     const loginBtn = document.getElementById('login-btn');
-    if (AUTH.clientId) {
-        loginBtn.style.display = '';
-        loginBtn.addEventListener('click', async () => {
+    loginBtn.addEventListener('click', async () => {
             try {
                 const flow = await startDeviceFlow();
                 document.getElementById('device-code-display').style.display = 'block';
@@ -36,7 +34,6 @@ function showAuth() {
                 alert('Authentication failed: ' + err.message);
             }
         });
-    }
 
     // PAT login
     document.getElementById('pat-btn').addEventListener('click', async () => {

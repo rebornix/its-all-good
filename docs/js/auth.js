@@ -10,7 +10,7 @@
 // The PAT needs: repo, read:org scopes.
 
 const AUTH = {
-    clientId: '', // Set your OAuth App Client ID here
+    clientId: 'Ov23ctxqyUBplm3UrAGw',
     scopes: 'repo read:org',
     deviceCodeUrl: 'https://github.com/login/device/code',
     tokenUrl: 'https://github.com/login/oauth/access_token',
