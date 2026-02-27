@@ -1,19 +1,15 @@
-// GitHub Device Flow OAuth
+// GitHub Device Flow OAuth via Cloudflare Worker CORS proxy
 //
-// To use device flow, create a GitHub OAuth App:
-//   1. Go to https://github.com/settings/developers → "New OAuth App"
-//   2. Set "Authorization callback URL" to https://github.com (unused for device flow)
-//   3. Enable "Device Flow" in the app settings
-//   4. Copy the Client ID and set it below
+// The worker proxies requests to GitHub's device flow endpoints
+// with proper CORS headers, since GitHub doesn't support CORS on those endpoints.
 //
-// Alternatively, you can paste a Personal Access Token (PAT) directly.
-// The PAT needs: repo, read:org scopes.
+// Fallback: paste a Personal Access Token (PAT) directly.
 
 const AUTH = {
     clientId: 'Ov23ctxqyUBplm3UrAGw',
     scopes: 'repo read:org',
-    deviceCodeUrl: 'https://github.com/login/device/code',
-    tokenUrl: 'https://github.com/login/oauth/access_token',
+    // Cloudflare Worker proxy — set this after deploying the worker
+    proxyBase: '', // e.g. 'https://its-all-good-proxy.yourname.workers.dev'
     storageKey: 'its-all-good-token',
     userKey: 'its-all-good-user',
 };
@@ -32,8 +28,12 @@ function clearAuth() {
     localStorage.removeItem(AUTH.userKey);
 }
 
+function hasDeviceFlow() {
+    return !!AUTH.proxyBase && !!AUTH.clientId;
+}
+
 async function startDeviceFlow() {
-    const resp = await fetch(AUTH.deviceCodeUrl, {
+    const resp = await fetch(`${AUTH.proxyBase}/login/device/code`, {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
@@ -53,7 +53,7 @@ async function pollForToken(deviceCode, interval) {
     while (true) {
         await new Promise(r => setTimeout(r, interval * 1000));
 
-        const resp = await fetch(AUTH.tokenUrl, {
+        const resp = await fetch(`${AUTH.proxyBase}/login/oauth/access_token`, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -70,7 +70,6 @@ async function pollForToken(deviceCode, interval) {
 
         if (data.access_token) {
             localStorage.setItem(AUTH.storageKey, data.access_token);
-            // Fetch user info
             const userResp = await fetch('https://api.github.com/user', {
                 headers: { 'Authorization': `token ${data.access_token}` },
             });
