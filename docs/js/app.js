@@ -14,27 +14,6 @@ function showAuth() {
     document.getElementById('auth-screen').style.display = 'flex';
     document.getElementById('app').style.display = 'none';
 
-    // Device flow login
-    const loginBtn = document.getElementById('login-btn');
-    loginBtn.addEventListener('click', async () => {
-            try {
-                const flow = await startDeviceFlow();
-                document.getElementById('device-code-display').style.display = 'block';
-                document.getElementById('user-code').textContent = flow.user_code;
-                const verifyLink = document.getElementById('verification-url');
-                verifyLink.href = flow.verification_uri;
-                verifyLink.textContent = flow.verification_uri.replace('https://', '');
-
-                window.open(flow.verification_uri, '_blank');
-
-                await pollForToken(flow.device_code, flow.interval || 5);
-                showApp();
-                loadRuns();
-            } catch (err) {
-                alert('Authentication failed: ' + err.message);
-            }
-        });
-
     // PAT login
     document.getElementById('pat-btn').addEventListener('click', async () => {
         const token = document.getElementById('pat-input').value.trim();

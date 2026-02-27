@@ -13,16 +13,10 @@
         <div class="auth-card">
             <h1>it's all good</h1>
             <p class="description">triage agent session dashboard</p>
-            <button id="login-btn" class="btn-primary">Sign in with GitHub</button>
-            <div id="device-code-display" class="device-code" style="display:none">
-                <p>Enter this code at <a id="verification-url" href="#" target="_blank">github.com/login/device</a>:</p>
-                <div class="code-value" id="user-code"></div>
-                <p class="muted">Waiting for authorization...</p>
-            </div>
-            <div id="pat-login" class="pat-login">
-                <p class="muted" style="margin-bottom:1rem">Paste a GitHub Personal Access Token with <code>repo</code> and <code>read:org</code> scopes</p>
+            <div class="pat-login">
+                <p class="muted" style="margin-bottom:1rem">Sign in with a <a href="https://github.com/settings/tokens/new?scopes=repo,read:org&description=its-all-good" target="_blank">Personal Access Token</a> with <code>repo</code> and <code>read:org</code> scopes</p>
                 <input type="password" id="pat-input" class="pat-input" placeholder="ghp_xxxxxxxxxxxx" />
-                <button id="pat-btn" class="btn-primary" style="margin-top:1rem">Sign in with Token</button>
+                <button id="pat-btn" class="btn-primary" style="margin-top:1rem">Sign in</button>
             </div>
         </div>
     </div>
