@@ -9,7 +9,7 @@ const AUTH = {
     clientId: 'Ov23ctxqyUBplm3UrAGw',
     scopes: 'repo read:org',
     // Cloudflare Worker proxy — set this after deploying the worker
-    proxyBase: '', // e.g. 'https://its-all-good-proxy.yourname.workers.dev'
+    proxyBase: 'https://its-all-good-proxy.penn-lv.workers.dev',
     storageKey: 'its-all-good-token',
     userKey: 'its-all-good-user',
 };
