@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>it's all good — triage dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+</head>
+<body>
+    <!-- Auth screen -->
+    <div id="auth-screen" class="auth-screen">
+        <div class="auth-card">
+            <h1>it's all good</h1>
+            <p class="description">triage agent session dashboard</p>
+            <button id="login-btn" class="btn-primary" style="display:none">Sign in with GitHub</button>
+            <div id="device-code-display" class="device-code" style="display:none">
+                <p>Enter this code at <a id="verification-url" href="#" target="_blank">github.com/login/device</a>:</p>
+                <div class="code-value" id="user-code"></div>
+                <p class="muted">Waiting for authorization...</p>
+            </div>
+            <div id="pat-login" class="pat-login">
+                <p class="muted" style="margin-bottom:1rem">Paste a GitHub Personal Access Token with <code>repo</code> and <code>read:org</code> scopes</p>
+                <input type="password" id="pat-input" class="pat-input" placeholder="ghp_xxxxxxxxxxxx" />
+                <button id="pat-btn" class="btn-primary" style="margin-top:1rem">Sign in with Token</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main app -->
+    <div id="app" style="display:none">
+        <main>
+            <div class="page-header">
+                <div class="header-row">
+                    <div>
+                        <h1>it's all good</h1>
+                        <p class="description">triage agent session dashboard</p>
+                    </div>
+                    <div class="header-actions">
+                        <span id="user-info" class="user-info"></span>
+                        <button id="logout-btn" class="btn-small">Sign out</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <section class="filters">
+                <label>
+                    Time range:
+                    <select id="time-filter">
+                        <option value="6">Last 6 hours</option>
+                        <option value="24">Last 24 hours</option>
+                        <option value="72">Last 3 days</option>
+                        <option value="168">Last 7 days</option>
+                    </select>
+                </label>
+                <label>
+                    Status:
+                    <select id="status-filter">
+                        <option value="all">All</option>
+                        <option value="success">Success</option>
+                        <option value="failure">Failure</option>
+                    </select>
+                </label>
+                <label>
+                    Repo:
+                    <select id="repo-filter">
+                        <option value="all">All Repos</option>
+                    </select>
+                </label>
+                <button id="refresh-btn" class="btn-small">Refresh</button>
+            </section>
+
+            <!-- Stats -->
+            <section class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-total">-</div>
+                    <div class="stat-label">Runs</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-success">-</div>
+                    <div class="stat-label">Succeeded</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-failed">-</div>
+                    <div class="stat-label">Failed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-duration">-</div>
+                    <div class="stat-label">Avg Duration</div>
+                </div>
+            </section>
+
+            <!-- Runs table -->
+            <section id="runs-section">
+                <h2>Triage Runs</h2>
+                <table id="runs-table">
+                    <thead>
+                        <tr>
+                            <th>Issue</th>
+                            <th>Repo</th>
+                            <th>Status</th>
+                            <th>Started</th>
+                            <th>Duration</th>
+                            <th>Session</th>
+                        </tr>
+                    </thead>
+                    <tbody id="runs-body">
+                        <tr><td colspan="6">Sign in to view triage runs</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Session detail overlay -->
+            <div id="session-overlay" class="overlay" style="display:none">
+                <div class="overlay-content">
+                    <div class="overlay-header">
+                        <h2 id="session-title">Session</h2>
+                        <button id="close-overlay" class="btn-close">✕</button>
+                    </div>
+                    <div id="session-meta" class="session-meta"></div>
+                    <div class="session-tabs">
+                        <button class="tab-btn active" data-tab="timeline">Timeline</button>
+                        <button class="tab-btn" data-tab="conversation">Conversation</button>
+                        <button class="tab-btn" data-tab="raw">Raw</button>
+                    </div>
+                    <div id="tab-timeline" class="tab-panel active">
+                        <div id="session-timeline" class="trace-timeline"></div>
+                    </div>
+                    <div id="tab-conversation" class="tab-panel">
+                        <div id="session-conversation" class="conversation"></div>
+                    </div>
+                    <div id="tab-raw" class="tab-panel">
+                        <pre id="session-raw" class="raw-content"></pre>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/session-renderer.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
